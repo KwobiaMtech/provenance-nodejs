@@ -7,7 +7,7 @@ export declare class ProvenanceService {
     init(): Promise<ProvenanceService>;
     setEnvironment(environment: "TEST_NET" | "MAIN_NET"): void;
     getEnvironment(): "TEST_NET" | "MAIN_NET";
-    createProvenanceWallet(): Promise<ProvenanceWallet>;
+    createProvenanceWallet(): ProvenanceWallet;
     getBalance(address: string): Promise<import("cosmjs-types/cosmos/base/v1beta1/coin").Coin>;
     getTransactionDetails(txHash: string): Promise<ProvenanceTransactionDetails>;
     createTransaction(senderAddress: string, receiverAddress: string, senderMnemonic: string, amount: number): Promise<{

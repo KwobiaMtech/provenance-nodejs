@@ -42,7 +42,7 @@ export class ProvenanceService {
     return this.environment;
   }
 
-  async createProvenanceWallet(): Promise<ProvenanceWallet> {
+  createProvenanceWallet(): ProvenanceWallet {
     const MASTER_SECRET = Buffer.from("Bitcoin seed", "utf8");
     const PRIVATE_KEY_SIZE = 32;
     const CHAINCODE_SIZE = 32;
@@ -73,8 +73,7 @@ export class ProvenanceService {
   }
 
   async getBalance(address: string) {
-    const balance = await this.client.getBalance(address, "nhash");
-    return balance;
+    return await this.client.getBalance(address, "nhash");
   }
 
   async getTransactionDetails(
@@ -87,13 +86,17 @@ export class ProvenanceService {
     const sentMessage: MsgSend = MsgSend.decode(
       decodedTx.body.messages[0].value
     );
-    const hash = Number(sentMessage.amount[0].amount) / 1000000000;
+    const hash = Number(sentMessage.amount[0].amount) / 1e9;
     return {
       senderAddress: sentMessage.fromAddress,
       receiverAddress: sentMessage.toAddress,
       tokenMintAddress: sentMessage.amount[0].denom,
       amount: hash,
     };
+  }
+
+  async convertToHash(amount: number) {
+    return amount * 1e9;
   }
 
   async createTransaction(
@@ -103,7 +106,7 @@ export class ProvenanceService {
     amount: number
   ): Promise<{ gasUsed: number; gasWanted: number; transactionHash: string }> {
     amount = 1000000000 * amount;
-    const senderBalance = await this.client.getBalance(senderAddress, "nhash");
+    const senderBalance = await this.getBalance(senderAddress);
     if (Number(senderBalance.amount) < amount) {
       throw new Error(
         `Sender account balance not sufficient. Current balance ${senderBalance.amount}`

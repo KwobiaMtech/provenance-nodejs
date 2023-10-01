@@ -11,7 +11,8 @@ describe("WALLET TEST", () => {
   });
 
   it("should create wallet TEST", async () => {
-    const wallet: any = await provenance.createProvenanceWallet();
+    const wallet: any = provenance.createProvenanceWallet();
+    console.log("wallet", wallet);
     expect(wallet.privateKey).toBeDefined();
     expect(wallet.address).toBeDefined();
     expect(wallet.publicKey).toBeDefined();
@@ -20,7 +21,7 @@ describe("WALLET TEST", () => {
 
   it("should create MAIN_NET wallet TEST", async () => {
     provenance.setEnvironment("MAIN_NET");
-    const wallet: any = await provenance.createProvenanceWallet();
+    const wallet: any = provenance.createProvenanceWallet();
     expect(wallet.privateKey).toBeDefined();
     expect(wallet.address).toBeDefined();
     expect(wallet.publicKey).toBeDefined();
