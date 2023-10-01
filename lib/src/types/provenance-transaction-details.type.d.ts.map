@@ -1,0 +1,1 @@
+{"version":3,"file":"provenance-transaction-details.type.d.ts","sourceRoot":"","sources":["../../../src/types/provenance-transaction-details.type.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,4BAA4B,GAAG;IACvC,aAAa,EAAE,MAAM,CAAC;IACtB,eAAe,EAAE,MAAM,CAAC;IACxB,gBAAgB,EAAE,MAAM,CAAC;IACzB,MAAM,EAAE,MAAM,CAAC;CAChB,CAAC"}
