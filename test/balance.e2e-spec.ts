@@ -1,18 +1,17 @@
 import * as dotenv from "dotenv";
-import { ProvenanceService } from "../src/services/provenance.service";
+import { Provenance } from "../src/services/provenance.service";
 import { ProvenanceWallet } from "index";
 
 dotenv.config();
 
 describe("BALANCE TEST", () => {
-  let provenance: ProvenanceService;
+  let client: Provenance;
   beforeAll(async () => {
-    provenance = new ProvenanceService();
-    await provenance.init();
+    client = await Provenance.build();
   });
 
   const createWallet = () => {
-    const wallet = provenance.createProvenanceWallet();
+    const wallet = client.createWallet();
     expect(wallet.privateKey).toBeDefined();
     expect(wallet.address).toBeDefined();
     expect(wallet.publicKey).toBeDefined();
@@ -22,7 +21,7 @@ describe("BALANCE TEST", () => {
 
   it("get wallet balance", async () => {
     const wallet: ProvenanceWallet = createWallet();
-    const balance = await provenance.getBalance(wallet.address);
+    const balance = await client.getBalance(wallet.address);
     expect(balance).toBeDefined();
     expect(balance.denom).toBeDefined();
     expect(balance.amount).toBeDefined();

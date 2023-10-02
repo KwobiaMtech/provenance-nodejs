@@ -1,17 +1,16 @@
 import * as dotenv from "dotenv";
-import { ProvenanceService } from "../src/services/provenance.service";
+import { Provenance } from "../src/services/provenance.service";
 
 dotenv.config();
 
 describe("SEND TOKEN TEST", () => {
-  let provenance: ProvenanceService;
-  beforeAll(async () => {
-    provenance = new ProvenanceService();
-    await provenance.init();
-  });
+    let client: Provenance;
+    beforeAll(async () => {
+      client = await Provenance.build();
+    });
 
-  const createWallet = () => {
-    const wallet = provenance.createProvenanceWallet();
+  const createWallet = async () => {
+    const wallet = client.createWallet();
     expect(wallet.privateKey).toBeDefined();
     expect(wallet.address).toBeDefined();
     expect(wallet.publicKey).toBeDefined();
@@ -20,8 +19,8 @@ describe("SEND TOKEN TEST", () => {
   };
 
   it("should be able to send token", async () => {
-    const wallet = createWallet();
-    const transaction = await provenance.createTransaction(
+    const wallet = await createWallet();
+    const transaction = await client.createTransaction(
       process.env.ADDRESS,
       wallet.address,
       process.env.MNEMONIC_PHRASE,
@@ -32,7 +31,7 @@ describe("SEND TOKEN TEST", () => {
     expect(transaction.gasWanted).toBeDefined();
     expect(transaction.transactionHash).toBeDefined();
 
-    const receiverBalance = await provenance.getBalance(wallet.address);
+    const receiverBalance = await client.getBalance(wallet.address);
     expect(receiverBalance.amount).toEqual("1000000000");
   });
 });

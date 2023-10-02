@@ -18,31 +18,37 @@ import { Tx } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 import { stringToPath } from "@cosmjs/crypto";
 import { PROVENANCE_CONFIG } from "../config/config.provenance";
 
-export class ProvenanceService {
-  private client: StargateClient;
-  private environment: "TEST_NET" | "MAIN_NET";
+export class Provenance {
+  private static _client: StargateClient;
+  private static _environment: "TEST_NET" | "MAIN_NET";
+
   constructor(environment?: "TEST_NET" | "MAIN_NET") {
-    this.environment = environment;
+    Provenance._environment = environment || "TEST_NET";
   }
 
-  public async init() {
-    this.client = await StargateClient.connect(
-      this.environment === "MAIN_NET"
+  get client() {
+    return Provenance._client;
+  }
+
+  get environment() {
+    return Provenance._environment;
+  }
+
+  set environment(environment: "TEST_NET" | "MAIN_NET") {
+    Provenance._environment = environment;
+  }
+
+  public static async build(): Promise<Provenance> {
+    Provenance._client = await StargateClient.connect(
+      Provenance._environment === "MAIN_NET"
         ? PROVENANCE_CONFIG.MAIN_NET.PROVENANCE_RPC_URL
         : PROVENANCE_CONFIG.TEST_NET.PROVENANCE_RPC_URL
     );
-    return new ProvenanceService(this.environment ?? "TEST_NET");
+
+    return new Provenance();
   }
 
-  setEnvironment(environment: "TEST_NET" | "MAIN_NET") {
-    this.environment = environment;
-  }
-
-  getEnvironment() {
-    return this.environment;
-  }
-
-  createProvenanceWallet(): ProvenanceWallet {
+  createWallet(): ProvenanceWallet {
     const MASTER_SECRET = Buffer.from("Bitcoin seed", "utf8");
     const PRIVATE_KEY_SIZE = 32;
     const CHAINCODE_SIZE = 32;
@@ -72,11 +78,11 @@ export class ProvenanceService {
     };
   }
 
-  async getBalance(address: string) {
+  public async getBalance(address: string): Promise<provenance.Coin> {
     return await this.client.getBalance(address, "nhash");
   }
 
-  async getTransactionDetails(
+  public async getTransactionDetails(
     txHash: string
   ): Promise<ProvenanceTransactionDetails> {
     const faucetTx: IndexedTx = await this.client.getTx(txHash);
@@ -95,11 +101,11 @@ export class ProvenanceService {
     };
   }
 
-  async convertToHash(amount: number) {
+  public async convertToHash(amount: number) {
     return amount * 1e9;
   }
 
-  async createTransaction(
+  public async createTransaction(
     senderAddress: string,
     receiverAddress: string,
     senderMnemonic: string,

@@ -1,6 +1,6 @@
 {
   "name": "provenance-nodejs",
-  "version": "1.0.0",
+  "version": "1.0.9",
   "main": "lib/src/index.js",
   "module": "lib/src/index.m.js",
   "unpkg": "lib/src/index.umd.js",
