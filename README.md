@@ -1,8 +1,4 @@
-<h1 align="center">PROVENANCE NODE-JS</h1>
-
-<p align="center">
-  <strong>Provenance sdk for nodejs devolopers</strong>
-</p>
+## Provenance package for nodejs devolopers
 
 > This is a nodejs package for provenance blockchain. It is a wrapper around the cosmos sdk. It is written in typescript and can be used in any nodejs project. It is a work in progress and will be updated regularly.
 
